@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GP Site Solutions — Employee Hub Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#66B245" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{
+      --gp-green:#66B245;
+      --gp-dark:#0A0A0A;
+      color-scheme: light dark;
+    }
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin:0; padding:24px; text-align:center;
+      background: Canvas; color: CanvasText;
+    }
+    .wrap{
+      max-width: 560px; margin: 8vh auto; padding: 28px 28px 22px;
+      border-radius: 18px; box-shadow: 0 8px 30px rgba(0,0,0,.08);
+      background: Field; color: FieldText;
+    }
+    img.logo{ height:64px; margin-bottom: 8px; }
+    h1{ font-size:22px; margin: 6px 0 4px; font-weight:700; }
+    input{
+      padding:16px; margin:10px 0; width:100%; font-size:18px;
+      border-radius:12px; border:1px solid #d0d7de; outline:none;
+    }
+    button{
+      padding:14px 20px; font-size:18px; cursor:pointer; width:100%;
+      border:none; border-radius:12px; font-weight:600;
+      background:linear-gradient(180deg,#66B245,#4E8E36); color:#fff;
+    }
+    #message{ margin-top:12px; min-height:22px; font-size:15px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <img class="logo" src="logo.png" alt="GP Site Solutions logo" />
+    <h1>GP Site Solutions — Employee Hub Login</h1>
+    <form onsubmit="event.preventDefault(); checkUser();">
+      <input type="email" id="email" placeholder="Enter your work email" required />
+      <button type="submit">Continue</button>
+    </form>
+    <p id="message"></p>
+  </div>
+  <script>
+    const users = [
+      { id: 1, email: "leonardgreeff@glosscalm.com" }
+    ];
+    const APPS_SCRIPT_URL = "REPLACE_WITH_YOUR_APPS_SCRIPT_WEB_APP_URL";
+    function logEmailToSheet(email){
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.startsWith("REPLACE_")) return;
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ email }),
+        headers: { "Content-Type": "application/json" },
+        mode: "no-cors"
+      });
+    }
+    function checkUser(){
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const user = users.find(u => u.email.toLowerCase() === email);
+      const msg = document.getElementById("message");
+      if(user){
+        msg.textContent = "Access granted. Redirecting…";
+        logEmailToSheet(email);
+        setTimeout(() => {
+          window.location.href = "https://sites.google.com/view/gp-site-solutions-employee-hub/home";
+        }, 600);
+      } else {
+        msg.textContent = "Email not found. Use your approved work email.";
+      }
+    }
+  </script>
+</body>
+</html>
