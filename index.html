@@ -43,60 +43,78 @@
   <div class="wrap">
     <img class="logo" src="logo.png" alt="GP Site Solutions logo" />
     <h1>GP Site Solutions — Employee Hub Login</h1>
-    <form onsubmit="event.preventDefault(); checkUser();">
+    <form id="login-form">
       <input type="email" id="email" placeholder="Enter your work email" required />
       <button type="submit">Continue</button>
     </form>
     <p id="message"></p>
+    <noscript style="color:red; font-size:14px;">
+      JavaScript is disabled in your browser. Please enable it to access the Employee Hub.
+    </noscript>
   </div>
 
   <script>
-    // ✅ FIXED: Added commas between objects
+    // ✅ List of allowed users
     const users = [
-    <script>
-  const users = [
-    { id: 1, email: "leonardgreeff@glosscalm.com" },
-    { id: 2, email: "hbennett@greenpower-plant.co.uk" },
-    { id: 3, email: "will@greenpower-plant.co.uk" },
-    { id: 4, email: "eva.rawlins@duntonplant.co.uk" },
-    { id: 5, email: "ajames@greenpower-plant.co.uk" },
-    { id: 6, email: "dgrove@greenpower-plant.co.uk" },
-    { id: 7, email: "lswingle@greenpower-plant.co.uk" },
-    { id: 8, email: "mparkes@greenpower-plant.co.uk" },
-    { id: 9, email: "smoss@greenpower-plant.co.uk" },
-    { id: 10, email: "tanson@greenpower-plant.co.uk" },
-    { id: 11, email: "erawlins@greenpower-plant.co.uk" }
-  ];
+      { id: 1,  email: "leonardgreeff@glosscalm.com" },
+      { id: 2,  email: "hbennett@greenpower-plant.co.uk" },
+      { id: 3,  email: "will@greenpower-plant.co.uk" },
+      { id: 4,  email: "eva.rawlins@duntonplant.co.uk" },
+      { id: 5,  email: "ajames@greenpower-plant.co.uk" },
+      { id: 6,  email: "dgrove@greenpower-plant.co.uk" },
+      { id: 7,  email: "lswingle@greenpower-plant.co.uk" },
+      { id: 8,  email: "mparkes@greenpower-plant.co.uk" },
+      { id: 9,  email: "smoss@greenpower-plant.co.uk" },
+      { id: 10, email: "tanson@greenpower-plant.co.uk" },
+      { id: 11, email: "erawlins@greenpower-plant.co.uk" }
+    ];
 
-  const APPS_SCRIPT_URL = "REPLACE_WITH_YOUR_APPS_SCRIPT_WEB_APP_URL";
+    // 🔗 Put your real Apps Script URL here if you want logging
+    const APPS_SCRIPT_URL = ""; // leave empty for now to avoid errors
 
-  function logEmailToSheet(email){
-    // Skip logging if URL not configured
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.startsWith("REPLACE_")) return;
+    function logEmailToSheet(email){
+      if (!APPS_SCRIPT_URL) return; // safely do nothing if not configured
 
-    fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify({ email }),
-      headers: { "Content-Type": "application/json" },
-      mode: "no-cors"
-    });
-  }
-
-  function checkUser(){
-    const emailInput = document.getElementById("email");
-    const email = emailInput.value.trim().toLowerCase();
-    const msg = document.getElementById("message");
-
-    const user = users.find(u => u.email.toLowerCase() === email);
-
-    if (user) {
-      msg.textContent = "Access granted. Redirecting…";
-      logEmailToSheet(email);
-      setTimeout(() => {
-        window.location.href = "https://sites.google.com/view/gp-site-solutions-employee-hub/home";
-      }, 600);
-    } else {
-      msg.textContent = "Email not found. Please use your approved work email.";
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ email }),
+        headers: { "Content-Type": "application/json" },
+        mode: "no-cors"
+      });
     }
-  }
-</script>
+
+    function checkUser(email, msgEl){
+      const normalisedEmail = email.trim().toLowerCase();
+
+      // Debug: show what the browser sees
+      console.log("Entered email:", normalisedEmail);
+
+      const user = users.find(u => u.email.toLowerCase() === normalisedEmail);
+
+      if (user) {
+        msgEl.textContent = "Access granted. Redirecting…";
+        logEmailToSheet(normalisedEmail);
+
+        setTimeout(() => {
+          window.location.href = "https://sites.google.com/view/gp-site-solutions-employee-hub/home";
+        }, 800);
+      } else {
+        msgEl.textContent = "Email not found. Please use your approved work email.";
+      }
+    }
+
+    // ✅ Attach the submit handler once the DOM is ready
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("login-form");
+      const emailInput = document.getElementById("email");
+      const msg = document.getElementById("message");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        msg.textContent = ""; // clear old message
+        checkUser(emailInput.value, msg);
+      });
+    });
+  </script>
+</body>
+</html>
