@@ -53,50 +53,50 @@
   <script>
     // ✅ FIXED: Added commas between objects
     const users = [
-      { id: 1, email: "leonardgreeff@glosscalm.com" },
-      { id: 2, email: "hbennett@greenpower-plant.co.uk" },
-      { id: 3, email: "will@greenpower-plant.co.uk" },
-      { id: 4, email: "eva.rawlins@duntonplant.co.uk" }
-      { id: 5, email: "ajames@greenpower-plant.co.uk" }
-      { id: 6, email: "dgrove@greenpower-plant.co.uk" }
-      { id: 7, email: "lswingle@greenpower-plant.co.uk" }
-      { id: 8, email: "mparkes@greenpower-plant.co.uk" }
-      { id: 9, email: "smoss@greenpower-plant.co.uk" }
-      { id: 10, email: "tanson@greenpower-plant.co.uk" }
-      { id: 11, email: "erawlins@greenpower-plant.co.uk" }
-    ];
+    <script>
+  const users = [
+    { id: 1, email: "leonardgreeff@glosscalm.com" },
+    { id: 2, email: "hbennett@greenpower-plant.co.uk" },
+    { id: 3, email: "will@greenpower-plant.co.uk" },
+    { id: 4, email: "eva.rawlins@duntonplant.co.uk" },
+    { id: 5, email: "ajames@greenpower-plant.co.uk" },
+    { id: 6, email: "dgrove@greenpower-plant.co.uk" },
+    { id: 7, email: "lswingle@greenpower-plant.co.uk" },
+    { id: 8, email: "mparkes@greenpower-plant.co.uk" },
+    { id: 9, email: "smoss@greenpower-plant.co.uk" },
+    { id: 10, email: "tanson@greenpower-plant.co.uk" },
+    { id: 11, email: "erawlins@greenpower-plant.co.uk" }
+  ];
 
-    const APPS_SCRIPT_URL = "REPLACE_WITH_YOUR_APPS_SCRIPT_WEB_APP_URL";
+  const APPS_SCRIPT_URL = "REPLACE_WITH_YOUR_APPS_SCRIPT_WEB_APP_URL";
 
-    function logEmailToSheet(email){
-      // Skip logging if URL not configured
-      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.startsWith("REPLACE_")) return;
+  function logEmailToSheet(email){
+    // Skip logging if URL not configured
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.startsWith("REPLACE_")) return;
 
-      fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({ email }),
-        headers: { "Content-Type": "application/json" },
-        mode: "no-cors"
-      });
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ email }),
+      headers: { "Content-Type": "application/json" },
+      mode: "no-cors"
+    });
+  }
+
+  function checkUser(){
+    const emailInput = document.getElementById("email");
+    const email = emailInput.value.trim().toLowerCase();
+    const msg = document.getElementById("message");
+
+    const user = users.find(u => u.email.toLowerCase() === email);
+
+    if (user) {
+      msg.textContent = "Access granted. Redirecting…";
+      logEmailToSheet(email);
+      setTimeout(() => {
+        window.location.href = "https://sites.google.com/view/gp-site-solutions-employee-hub/home";
+      }, 600);
+    } else {
+      msg.textContent = "Email not found. Please use your approved work email.";
     }
-
-    function checkUser(){
-      const emailInput = document.getElementById("email");
-      const email = emailInput.value.trim().toLowerCase();
-      const msg = document.getElementById("message");
-
-      const user = users.find(u => u.email.toLowerCase() === email);
-
-      if(user){
-        msg.textContent = "Access granted. Redirecting…";
-        logEmailToSheet(email);
-        setTimeout(() => {
-          window.location.href = "https://sites.google.com/view/gp-site-solutions-employee-hub/home";
-        }, 600);
-      } else {
-        msg.textContent = "Email not found. Please use your approved work email.";
-      }
-    }
-  </script>
-</body>
-</html>
+  }
+</script>
