@@ -49,16 +49,22 @@
     </form>
     <p id="message"></p>
   </div>
+
   <script>
+    // ✅ FIXED: Added commas between objects
     const users = [
-      { id: 1, email: "leonardgreeff@glosscalm.com" }
-      { id: 2, email: "hbennett@greenpower-plant.co.uk" }
-      { id: 3, email: "will@greenpower-plant.co.uk" }
+      { id: 1, email: "leonardgreeff@glosscalm.com" },
+      { id: 2, email: "hbennett@greenpower-plant.co.uk" },
+      { id: 3, email: "will@greenpower-plant.co.uk" },
       { id: 4, email: "eva.rawlins@duntonplant.co.uk" }
     ];
+
     const APPS_SCRIPT_URL = "REPLACE_WITH_YOUR_APPS_SCRIPT_WEB_APP_URL";
+
     function logEmailToSheet(email){
+      // Skip logging if URL not configured
       if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.startsWith("REPLACE_")) return;
+
       fetch(APPS_SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({ email }),
@@ -66,10 +72,14 @@
         mode: "no-cors"
       });
     }
+
     function checkUser(){
-      const email = document.getElementById("email").value.trim().toLowerCase();
-      const user = users.find(u => u.email.toLowerCase() === email);
+      const emailInput = document.getElementById("email");
+      const email = emailInput.value.trim().toLowerCase();
       const msg = document.getElementById("message");
+
+      const user = users.find(u => u.email.toLowerCase() === email);
+
       if(user){
         msg.textContent = "Access granted. Redirecting…";
         logEmailToSheet(email);
@@ -77,7 +87,7 @@
           window.location.href = "https://sites.google.com/view/gp-site-solutions-employee-hub/home";
         }, 600);
       } else {
-        msg.textContent = "Email not found. Use your approved work email.";
+        msg.textContent = "Email not found. Please use your approved work email.";
       }
     }
   </script>
